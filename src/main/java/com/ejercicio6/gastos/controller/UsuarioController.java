@@ -1,7 +1,10 @@
 package com.ejercicio6.gastos.controller;
 
 import com.ejercicio6.gastos.model.Usuario;
+import com.ejercicio6.gastos.model.Gasto;
 import com.ejercicio6.gastos.service.UsuarioService;
+import com.ejercicio6.gastos.service.GastoService;
+import java.util.List;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,9 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private GastoService gastoService;
+
     // Verificar que sea admin (forma manual como se pedía en el proyecto anterior)
     private boolean esAdmin(HttpSession session) {
         Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
@@ -30,11 +36,28 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public String listarUsuarios(Model model, HttpSession session) {
-        if (!esAdmin(session)) {
-            return "redirect:/gastos"; // Solo administradores ven usuarios
+    public String listarUsuarios(
+            @RequestParam(value = "parteNombre", required = false) String parteNombre,
+            @RequestParam(value = "rol", required = false) String rol,
+            Model model, HttpSession session) {
+        
+        List<Usuario> usuarios;
+        if (parteNombre != null && !parteNombre.isEmpty()) {
+            usuarios = usuarioService.buscarPorNombre(parteNombre);
+            if (usuarios.isEmpty()) {
+                model.addAttribute("mensaje", "No se encontró información para la búsqueda: " + parteNombre);
+            }
+            model.addAttribute("parteNombre", parteNombre);
+        } else if (rol != null && !rol.isEmpty()) {
+            usuarios = usuarioService.listarPorRol(rol);
+            model.addAttribute("totalUsuariosRol", usuarios.size());
+            model.addAttribute("rolBuscado", rol);
+            model.addAttribute("rol", rol);
+        } else {
+            usuarios = usuarioService.listarTodos();
         }
-        model.addAttribute("usuarios", usuarioService.listarTodos());
+        
+        model.addAttribute("usuarios", usuarios);
         return "usuarios/list";
     }
 
@@ -110,5 +133,28 @@ public class UsuarioController {
         model.addAttribute("usuarios", usuarioService.buscarPorNombre(nombre));
         model.addAttribute("filtroAnterior", "Nombre contiene: " + nombre);
         return "usuarios/reportes";
+    }
+
+    @PostMapping("/reportes/resumen")
+    public String reporteResumenGastos(@RequestParam("idUsuario") String idUsuario, Model model, HttpSession session) {
+        Usuario u = usuarioService.buscarPorId(idUsuario).orElse(null);
+        if (u != null) {
+            model.addAttribute("usuarioResumen", u);
+            // Calculate total expenses for this user
+            int count = 0;
+            double total = 0.0;
+            java.util.List<Gasto> gastos = gastoService.listarPorUsuario(u);
+            if (gastos != null) {
+                count = gastos.size();
+                for (Gasto g : gastos) {
+                    total += g.getValorTotalConIVA();
+                }
+            }
+            model.addAttribute("cantidadGastos", count);
+            model.addAttribute("totalGastosUsuario", total);
+        } else {
+            model.addAttribute("mensaje", "Usuario no encontrado.");
+        }
+        return "gastos/reportes";
     }
 }

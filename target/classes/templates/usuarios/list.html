@@ -2,12 +2,36 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout('Gestión de Usuarios', ~{::div})}">
 <body>
     <div>
-        <div class="actions-bar">
-            <a th:href="@{/usuarios/nuevo}" class="btn-primary">Registrar Nuevo Usuario</a>
-            <a th:href="@{/usuarios/reportes}" class="btn-secondary">Generar Reportes</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2>Gestión de Usuarios</h2>
+            <a th:href="@{/usuarios/nuevo}" class="btn-primary" style="display:inline-block; padding:0.5rem 1rem; border-radius:8px; text-decoration:none; color:white; background-color:#3b82f6;">Nuevo Usuario</a>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; background: #1e293b; padding: 1rem; border-radius: 8px;">
+            <form th:action="@{/usuarios}" method="GET" style="display: flex; gap: 0.5rem; flex-direction: row; align-items: center;">
+                <input type="text" name="parteNombre" placeholder="Buscar por nombre..." style="width: 200px; padding: 0.5rem;" th:value="${parteNombre}">
+                <button type="submit" style="padding: 0.5rem 1rem; width: auto;" class="btn-primary">Buscar</button>
+            </form>
+            
+            <form th:action="@{/usuarios}" method="GET" style="display: flex; gap: 0.5rem; flex-direction: row; align-items: center;">
+                <select name="rol" style="width:auto; padding: 0.5rem;">
+                    <option value="Administrador" th:selected="${rol == 'Administrador'}">Administrador</option>
+                    <option value="Operador" th:selected="${rol == 'Operador'}">Operador</option>
+                </select>
+                <button type="submit" style="padding: 0.5rem 1rem; width: auto;" class="btn-primary">Filtrar Rol</button>
+                <a th:href="@{/usuarios}" style="padding: 0.5rem; text-decoration: none; color: #cbd5e1;">Limpiar</a>
+            </form>
+        </div>
+
+        <div th:if="${totalUsuariosRol != null}" style="background: rgba(139, 92, 246, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid #8b5cf6; color: #a78bfa; margin-bottom: 1rem;">
+            <strong>Total de usuarios con rol '<span th:text="${rolBuscado}"></span>':</strong> <span th:text="${totalUsuariosRol}"></span>
         </div>
         
-        <table class="data-table">
+        <div th:if="${mensaje}" class="error-msg" style="margin-bottom: 1rem;">
+            <span th:text="${mensaje}"></span>
+        </div>
+
+        <table>
             <thead>
                 <tr>
                     <th>ID / Cédula</th>
@@ -22,17 +46,16 @@
                     <td th:text="${user.id}"></td>
                     <td th:text="${user.nombre}"></td>
                     <td th:text="${user.email}"></td>
-                    <td><span class="badge" th:text="${user.rol}"></span></td>
-                    <td class="action-buttons">
-                        <a th:href="@{/usuarios/editar/{id}(id=${user.id})}" class="btn-edit">Editar</a>
-                        <!-- No permitir auto-eliminación visualmente -->
+                    <td th:text="${user.rol}"></td>
+                    <td>
+                        <a th:href="@{/usuarios/editar/{id}(id=${user.id})}" style="color: #f59e0b; margin-right: 0.5rem;">Editar</a>
                         <th:block th:if="${session.usuarioLogueado.id != user.id}">
-                            <a th:href="@{/usuarios/eliminar/{id}(id=${user.id})}" class="btn-delete" onclick="return confirm('¿Está seguro de eliminar este usuario?')">Eliminar</a>
+                            <a th:href="@{/usuarios/eliminar/{id}(id=${user.id})}" onclick="return confirm('¿Está seguro de eliminar este usuario?')" style="color: #ef4444;">Eliminar</a>
                         </th:block>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(usuarios)}">
-                    <td colspan="5" style="text-align: center;">No hay usuarios registrados</td>
+                    <td colspan="5" style="text-align: center; padding: 2rem;">No hay usuarios que coincidan con la búsqueda.</td>
                 </tr>
             </tbody>
         </table>

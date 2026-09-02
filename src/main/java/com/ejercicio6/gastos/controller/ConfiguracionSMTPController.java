@@ -25,10 +25,9 @@ public class ConfiguracionSMTPController {
             return "redirect:/";
         }
         
-        Optional<ConfiguracionSMTP> configOpt = smtpRepository.findById(1);
+        Optional<ConfiguracionSMTP> configOpt = smtpRepository.findAll().stream().findFirst();
         ConfiguracionSMTP config = configOpt.orElseGet(() -> {
             ConfiguracionSMTP nueva = new ConfiguracionSMTP();
-            nueva.setId(1);
             return nueva;
         });
         
@@ -42,7 +41,11 @@ public class ConfiguracionSMTPController {
             return "redirect:/";
         }
         
-        config.setId(1); // Siempre usamos el registro 1
+        // Buscar si ya existe una configuración para actualizarla
+        Optional<ConfiguracionSMTP> configOpt = smtpRepository.findAll().stream().findFirst();
+        if (configOpt.isPresent()) {
+            config.setId(configOpt.get().getId());
+        }
         smtpRepository.save(config);
         
         model.addAttribute("smtp", config);

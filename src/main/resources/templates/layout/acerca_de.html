@@ -4,32 +4,45 @@
     <title>Acerca De - App Gastos</title>
 </head>
 <body>
-    <div th:replace="~{layout/layout :: layout(~{::section})}">
+    <div th:replace="~{layout/layout :: layout('Acerca De', ~{::section})}">
         <section>
-            <h2 class="text-center mb-4">Acerca del Proyecto</h2>
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h4 class="card-title text-primary">Sistema de Gestión de Gastos</h4>
-                            <hr>
-                            <p class="card-text">
-                                Esta aplicación fue desarrollada como parte de la **Unidad 2** de la asignatura de **Desarrollo Web**. 
-                            </p>
-                            <p class="card-text">
-                                Su propósito principal es evidenciar la transición de una arquitectura tradicional de Servlets/JSP hacia un entorno moderno basado en el framework **Spring Boot MVC**, integrando componentes como:
-                            </p>
-                            <ul>
-                                <li><strong>Spring Data JPA:</strong> Para el mapeo relacional de objetos (ORM) y la persistencia de datos.</li>
-                                <li><strong>Thymeleaf:</strong> Para la generación de vistas del lado del servidor de forma dinámica y segura.</li>
-                                <li><strong>Arquitectura por Capas:</strong> Separación estricta entre Modelos, Repositorios, Servicios y Controladores.</li>
-                            </ul>
-                            <p class="card-text text-muted mt-4">
-                                <small>&copy; 2026 - Desarrollo Web. Todos los derechos reservados.</small>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+            <div style="padding: 30px;">
+                <h1 style="color: #10b981; border-bottom: 2px solid #334155; padding-bottom: 10px;">
+                    Proyecto Ejercicio 6 - Gestión de Gastos (Versión Spring Boot)
+                </h1>
+                <p>
+                    Esta aplicación web monolítica fue desarrollada como parte de la <strong>Unidad 2</strong> de la asignatura de <strong>Desarrollo Web</strong>.
+                    Su propósito principal es evidenciar la transición de una arquitectura tradicional de Servlets/JSP hacia un entorno moderno basado en el framework <strong>Spring Boot MVC</strong>.
+                </p>
+
+                <h2 style="color: var(--primary-color); margin-top: 30px; text-align: left;">Características Principales</h2>
+                <ul>
+                    <li><strong>Spring Boot MVC:</strong> Desarrollo web basado en el framework Spring, reemplazando el uso directo de Servlets y JSP.</li>
+                    <li><strong>Spring Data JPA:</strong> Mapeo relacional de objetos (ORM) y persistencia de datos (reemplazando JDBC puro).</li>
+                    <li><strong>Thymeleaf:</strong> Generación de vistas del lado del servidor (reemplazando a JSP).</li>
+                    <li><strong>Arquitectura por Capas:</strong> Separación estricta entre Modelos, Repositorios (JPA), Servicios y Controladores.</li>
+                </ul>
+
+                <h2 style="color: #10b981; margin-top: 30px; text-align: left;">Información de Despliegue y Acceso</h2>
+                <ul>
+                    <li><strong>URL del Repositorio (Git):</strong> <a href="https://github.com/rcarmonan-commits/app-gastos-ejercicio6_Spring_Boot_MVC_con_Thymeleaf.git" target="_blank" style="color:#60a5fa;">https://github.com/rcarmonan-commits/app-gastos-ejercicio6_Spring_Boot_MVC_con_Thymeleaf.git</a></li>
+                    <li><strong>URL del Despliegue en Render (App en Vivo):</strong> <a href="https://app-gastos-ejercicio6-spring-boot-mvc.onrender.com/" target="_blank" style="color:#60a5fa;">https://app-gastos-ejercicio6-spring-boot-mvc.onrender.com/</a></li>
+                    <li><strong>Motor de Base de Datos:</strong> MariaDB 11.4 (Remota en Alwaysdata)</li>
+                    <li><strong>Nombre de la Base de Datos:</strong> <code>app-gastos-ejercicio6_db</code></li>
+                </ul>
+
+                <h2 style="color: var(--primary-color); margin-top: 30px; text-align: left;">Estructura del Proyecto</h2>
+                <ul>
+                    <li><code>src/main/java/com/ejercicio6/gastos/model/</code>: Entidades mapeadas con JPA (@Entity).</li>
+                    <li><code>src/main/java/com/ejercicio6/gastos/repository/</code>: Interfaces JpaRepository para el acceso a datos.</li>
+                    <li><code>src/main/java/com/ejercicio6/gastos/service/</code>: Lógica de negocio.</li>
+                    <li><code>src/main/java/com/ejercicio6/gastos/controller/</code>: Controladores Spring MVC (@Controller) que manejan las peticiones.</li>
+                    <li><code>src/main/resources/templates/</code>: Plantillas HTML de Thymeleaf para las vistas.</li>
+                </ul>
+                
+                <p style="margin-top: 40px; font-size: 0.9em; color: #cbd5e1;">
+                    &copy; 2026 - Desarrollo Web. Todos los derechos reservados.
+                </p>
             </div>
         </section>
     </div>

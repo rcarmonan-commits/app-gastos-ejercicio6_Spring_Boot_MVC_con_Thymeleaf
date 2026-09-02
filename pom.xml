@@ -11,6 +11,7 @@
 	<groupId>com.ejercicio6</groupId>
 	<artifactId>gastos-springboot-mvc</artifactId>
 	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>app-gastos-ejercicio6-springboot</name>
 	<description>Aplicacion MVC con Spring Boot y Thymeleaf - Ejercicio 6 Gastos</description>
 	<properties>
@@ -31,6 +32,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<!-- Tomcat for standard deployment -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
 		</dependency>
 		<!-- MySQL Driver -->
 		<dependency>

@@ -1,43 +1,86 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout('Reportes de Gastos', ~{::div})}">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout('Reportes del Sistema', ~{::div})}">
 <body>
     <div>
-        <div class="report-filters">
-            <div class="filter-card">
-                <h3>Reporte por Rango de Fechas</h3>
-                <form th:action="@{/gastos/reportes/fechas}" method="POST">
-                    <div class="form-group">
-                        <label>Fecha Inicio:</label>
-                        <input type="date" name="fechaInicio" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Fecha Fin:</label>
-                        <input type="date" name="fechaFin" required>
-                    </div>
-                    <button type="submit" class="btn-primary">Buscar</button>
-                </form>
-            </div>
+        <h2 style="margin-bottom: 2rem;">Centro de Reportes</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
             
-            <div class="filter-card">
-                <h3>Suma de Gastos por Lugar</h3>
-                <form th:action="@{/gastos/reportes/lugar}" method="POST">
-                    <div class="form-group">
-                        <label>Lugar:</label>
-                        <input type="text" name="lugar" required>
+            <!-- Reporte: Sumar Gastos por Lugar -->
+            <div style="background: #1e293b; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155;">
+                <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: #3b82f6;">Sumar Gastos por Lugar</h3>
+                <form th:action="@{/gastos/reportes/lugar}" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Nombre del Lugar</label>
+                        <input type="text" name="lugar" placeholder="Ej: Supermercado" required>
                     </div>
                     <button type="submit" class="btn-primary">Calcular Suma</button>
                 </form>
             </div>
+            
+            <!-- Reporte: Gastos por Rango de Fechas -->
+            <div style="background: #1e293b; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155;">
+                <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: #3b82f6;">Gastos por Rango de Fechas</h3>
+                <form th:action="@{/gastos/reportes/fechas}" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Fecha de Inicio</label>
+                        <input type="date" name="fechaInicio" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Fecha de Fin</label>
+                        <input type="date" name="fechaFin" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Generar Reporte</button>
+                </form>
+            </div>
+            <!-- Reporte: Usuarios por Rol -->
+            <div style="background: #1e293b; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155;">
+                <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: #3b82f6;">Usuarios por Rol</h3>
+                <form th:action="@{/usuarios/reportes/rol}" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Seleccione el Rol</label>
+                        <select name="rol" required style="width: 100%; padding: 0.75rem; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: white;">
+                            <option value="Administrador">Administrador</option>
+                            <option value="Operador">Operador</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">Filtrar por Rol</button>
+                </form>
+            </div>
+            
+            <!-- Reporte: Resumen de Gastos del Usuario -->
+            <div style="background: #1e293b; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155;">
+                <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: #3b82f6;">Resumen de Gastos del Usuario</h3>
+                <form th:action="@{/usuarios/reportes/resumen}" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>ID del Usuario</label>
+                        <input type="text" name="idUsuario" placeholder="Ej: 1010" required>
+                        <small style="color: #94a3b8; font-size: 0.85rem; display: block; margin-top: 0.25rem;">Consulta todos los gastos y totales de un usuario.</small>
+                    </div>
+                    <button type="submit" class="btn-primary">Generar Resumen</button>
+                </form>
+            </div>
+
         </div>
 
-        <div th:if="${filtroAnterior}" class="report-results-header">
+        <!-- Renderizado de resultados de los reportes -->
+        <div th:if="${filtroAnterior}" class="report-results-header" style="margin-top: 2rem;">
             <h4>Resultados para: <span th:text="${filtroAnterior}"></span></h4>
         </div>
 
-        <div th:if="${mensaje}" class="success-msg" style="margin-top: 1rem; font-size: 1.2rem; text-align: center;">
+        <div th:if="${mensaje}" class="success-msg" style="margin-top: 1rem; font-size: 1.2rem; text-align: center; background: rgba(59, 130, 246, 0.1); border: 1px solid #3b82f6; color: #60a5fa;">
             <strong th:text="${mensaje}"></strong>
         </div>
 
+        <!-- Resultados: Resumen Usuario -->
+        <div th:if="${usuarioResumen != null}" style="background: rgba(245, 158, 11, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid #f59e0b; color: #fbbf24; margin-top: 1rem;">
+            <h3 style="margin: 0 0 0.5rem 0;">Resumen Analítico de Gastos</h3>
+            <p style="margin: 0.25rem 0;"><strong>Usuario:</strong> <span th:text="${usuarioResumen.nombre}"></span> (ID: <span th:text="${usuarioResumen.id}"></span>)</p>
+            <p style="margin: 0.25rem 0;"><strong>Total de compras:</strong> <span th:text="${cantidadGastos}"></span></p>
+            <p style="margin: 0.25rem 0; font-size: 1.1rem;"><strong>Gran Total Gastado:</strong> $<span th:text="${#numbers.formatDecimal(totalGastosUsuario, 1, 'COMMA', 2, 'POINT')}"></span></p>
+        </div>
+
+        <!-- Resultados: Lista de Gastos -->
         <table class="data-table" th:if="${gastos != null}">
             <thead>
                 <tr>
