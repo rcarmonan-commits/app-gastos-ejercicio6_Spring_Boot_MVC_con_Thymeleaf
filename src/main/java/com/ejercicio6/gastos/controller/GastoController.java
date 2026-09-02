@@ -32,8 +32,36 @@ public class GastoController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public String listarGastos(Model model) {
-        model.addAttribute("gastos", gastoService.listarTodos());
+    public String listarGastos(
+            @RequestParam(value = "fechaInicio", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin,
+            @RequestParam(value = "lugar", required = false) String lugar,
+            Model model) {
+        
+        if (fechaInicio != null && fechaFin != null) {
+            model.addAttribute("gastos", gastoService.listarPorRangoFechas(fechaInicio, fechaFin));
+            model.addAttribute("fechaInicio", new java.text.SimpleDateFormat("yyyy-MM-dd").format(fechaInicio));
+            model.addAttribute("fechaFin", new java.text.SimpleDateFormat("yyyy-MM-dd").format(fechaFin));
+            model.addAttribute("fechaInicioRango", new java.text.SimpleDateFormat("yyyy-MM-dd").format(fechaInicio));
+            model.addAttribute("fechaFinRango", new java.text.SimpleDateFormat("yyyy-MM-dd").format(fechaFin));
+            
+            // Calculate totalRango
+            double totalRango = 0.0;
+            for(Gasto g : gastoService.listarPorRangoFechas(fechaInicio, fechaFin)) {
+                totalRango += g.getValorTotalConIVA();
+            }
+            model.addAttribute("totalRango", totalRango);
+        } else if (lugar != null && !lugar.isEmpty()) {
+            Double totalSuma = gastoService.sumarGastosPorLugar(lugar);
+            model.addAttribute("totalSuma", totalSuma != null ? totalSuma : 0.0);
+            model.addAttribute("lugarSuma", lugar);
+            model.addAttribute("lugar", lugar);
+            // Optional: Filter the list as well or just show all
+            model.addAttribute("gastos", gastoService.listarTodos());
+        } else {
+            model.addAttribute("gastos", gastoService.listarTodos());
+        }
+        
         return "gastos/list";
     }
 

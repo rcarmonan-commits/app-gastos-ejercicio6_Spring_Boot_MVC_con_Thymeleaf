@@ -27,8 +27,8 @@ public class EmailService {
         if (userOpt.isPresent()) {
             Usuario usuario = userOpt.get();
             try {
-                // Obtener configuracion de la BD de forma dinamica
-                Optional<ConfiguracionSMTP> configOpt = smtpRepository.findById(1);
+                // Obtener la primera configuracion de la BD de forma dinamica sin importar su ID
+                Optional<ConfiguracionSMTP> configOpt = smtpRepository.findAll().stream().findFirst();
                 if (configOpt.isEmpty()) {
                     System.err.println("No se encontro configuracion SMTP en la base de datos.");
                     return false;

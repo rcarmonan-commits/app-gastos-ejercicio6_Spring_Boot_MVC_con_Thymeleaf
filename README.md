@@ -1,5 +1,19 @@
 # Aplicación de Gastos - Spring Boot MVC + Thymeleaf
 
+## Ficha de Entrega
+
+| Campo | Información |
+|---|---|
+| **Estudiante** | `[PON_AQUI_TU_NOMBRE_COMPLETO_Y_CODIGO]` |
+| **Datos académicos** | Desarrollo Web \| Semestre `[X]` |
+| **Actividad** | Spring Boot MVC con Thymeleaf: desarrollo web basado en framework |
+| **Ejercicio asignado** | Número 6 - Gasto |
+| **Guía utilizada** | Guía de Spring Web MVC |
+| **Código fuente** | [Enlace al Repositorio en GitHub](https://github.com/rcarmonan-commits/app-gastos-ejercicio6_Spring_Boot_MVC_con_Thymeleaf) |
+| **Sustentación** | `[ENLACE_A_TU_VIDEO_AQUI]` |
+| **Aplicación desplegada** | [App Spring Boot en Alwaysdata](http://app-gastos-ejercicio6.alwaysdata.net/springboot/) |
+
+---
 Este proyecto es el resultado de la **Unidad 2** de la asignatura Desarrollo Web. Cumple con la migración estricta desde un entorno Servlets hacia un entorno moderno basado en el framework **Spring Boot MVC**.
 
 ## Requisitos Previos y Entorno

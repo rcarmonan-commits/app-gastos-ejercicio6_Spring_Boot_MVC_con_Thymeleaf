@@ -28,7 +28,7 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
-    @GetMapping("/")
+    @GetMapping({"/", "/login"})
     public String index(HttpSession session) {
         if (session.getAttribute("usuarioLogueado") != null) {
             return "redirect:/gastos";

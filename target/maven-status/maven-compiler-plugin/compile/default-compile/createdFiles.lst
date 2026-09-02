@@ -1,0 +1,16 @@
+com\ejercicio6\gastos\service\UsuarioService.class
+com\ejercicio6\gastos\service\EmailService.class
+com\ejercicio6\gastos\config\WebConfig.class
+com\ejercicio6\gastos\service\GastoService.class
+com\ejercicio6\gastos\repository\UsuarioRepository.class
+com\ejercicio6\gastos\repository\ConfiguracionSMTPRepository.class
+com\ejercicio6\gastos\GastosApplication.class
+com\ejercicio6\gastos\controller\AuthController.class
+com\ejercicio6\gastos\controller\GastoController.class
+com\ejercicio6\gastos\model\Gasto.class
+com\ejercicio6\gastos\model\ConfiguracionSMTP.class
+com\ejercicio6\gastos\repository\GastoRepository.class
+com\ejercicio6\gastos\controller\ConfiguracionSMTPController.class
+com\ejercicio6\gastos\config\AuthInterceptor.class
+com\ejercicio6\gastos\model\Usuario.class
+com\ejercicio6\gastos\controller\UsuarioController.class

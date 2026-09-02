@@ -2,12 +2,43 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout('Lista de Gastos', ~{::div})}">
 <body>
     <div>
-        <div class="actions-bar">
-            <a th:href="@{/gastos/nuevo}" class="btn-primary">Registrar Nuevo Gasto</a>
-            <a th:href="@{/gastos/reportes}" class="btn-secondary">Generar Reportes</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2>Gestión de Gastos</h2>
+            <a th:href="@{/gastos/nuevo}" class="btn-primary" style="display:inline-block; padding:0.5rem 1rem; border-radius:8px; text-decoration:none; color:white; background-color:#3b82f6;">Nuevo Gasto</a>
         </div>
-        
-        <table class="data-table">
+
+        <div style="display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; background: #1e293b; padding: 1rem; border-radius: 8px;">
+            <div style="display: flex; flex-direction: column; width: 100%; gap: 1rem;">
+                <div style="display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                    <!-- Filtrar entre fechas -->
+                    <form th:action="@{/gastos}" method="GET" style="display: flex; gap: 0.5rem; flex-direction: row; align-items: center;">
+                        <label style="margin-bottom: 0;">Fechas:</label>
+                        <input type="date" name="fechaInicio" required style="width: auto; padding: 0.5rem;" th:value="${fechaInicio}">
+                        <span style="color: #cbd5e1;">-</span>
+                        <input type="date" name="fechaFin" required style="width: auto; padding: 0.5rem;" th:value="${fechaFin}">
+                        <button type="submit" style="padding: 0.5rem 1rem; width: auto;" class="btn-primary">Buscar</button>
+                    </form>
+                    
+                    <!-- Sumar IVA por lugar -->
+                    <form th:action="@{/gastos}" method="GET" style="display: flex; gap: 0.5rem; flex-direction: row; align-items: center;">
+                        <label style="margin-bottom: 0;">Lugar:</label>
+                        <input type="text" name="lugar" placeholder="Ej. Bogotá" required style="width: 200px; padding: 0.5rem;" th:value="${lugar}">
+                        <button type="submit" style="padding: 0.5rem 1rem; width: auto;" class="btn-primary">Sumar Total</button>
+                        <a th:href="@{/gastos}" style="padding: 0.5rem; text-decoration: none; color: #cbd5e1;">Limpiar</a>
+                    </form>
+                </div>
+                
+                <div th:if="${totalSuma != null}" style="background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid #3b82f6; color: #60a5fa; text-align: right;">
+                    <strong>Total de gastos con IVA en <span th:text="${lugarSuma}"></span>:</strong> $<span th:text="${#numbers.formatDecimal(totalSuma, 1, 'COMMA', 2, 'POINT')}"></span>
+                </div>
+                
+                <div th:if="${totalRango != null}" style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid #10b981; color: #34d399; text-align: right; margin-top: 0.5rem;">
+                    <strong>Gran Total Gastado (<span th:text="${fechaInicioRango}"></span> al <span th:text="${fechaFinRango}"></span>):</strong> $<span th:text="${#numbers.formatDecimal(totalRango, 1, 'COMMA', 2, 'POINT')}"></span>
+                </div>
+            </div>
+        </div>
+
+        <table>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -22,22 +53,22 @@
             </thead>
             <tbody>
                 <tr th:each="gasto : ${gastos}">
-                    <td th:text="${gasto.idGasto}">1</td>
-                    <td th:text="${#dates.format(gasto.fecha, 'yyyy-MM-dd')}">2023-10-10</td>
-                    <td th:text="'$' + ${gasto.valorTotalSinIVA}">$100</td>
-                    <td th:text="'$' + ${gasto.ivaTotal}">$19</td>
-                    <td th:text="'$' + ${gasto.valorTotalConIVA}">$119</td>
-                    <td th:text="${gasto.lugar}">Restaurante</td>
-                    <td th:text="${gasto.usuario.nombre}">Juan Perez</td>
-                    <td class="action-buttons">
-                        <a th:href="@{/gastos/editar/{id}(id=${gasto.idGasto})}" class="btn-edit">Editar</a>
+                    <td th:text="${gasto.idGasto}"></td>
+                    <td th:text="${#dates.format(gasto.fecha, 'yyyy-MM-dd')}"></td>
+                    <td th:text="'$' + ${gasto.valorTotalSinIVA}"></td>
+                    <td th:text="'$' + ${gasto.ivaTotal}"></td>
+                    <td th:text="'$' + ${gasto.valorTotalConIVA}"></td>
+                    <td th:text="${gasto.lugar}"></td>
+                    <td th:text="${gasto.usuario.nombre}"></td>
+                    <td>
+                        <a th:href="@{/gastos/editar/{id}(id=${gasto.idGasto})}" style="color: #f59e0b; margin-right: 0.5rem;">Editar</a>
                         <th:block th:if="${session.usuarioLogueado.rol == 'Administrador'}">
-                            <a th:href="@{/gastos/eliminar/{id}(id=${gasto.idGasto})}" class="btn-delete" onclick="return confirm('¿Está seguro de eliminar este gasto?')">Eliminar</a>
+                            <a th:href="@{/gastos/eliminar/{id}(id=${gasto.idGasto})}" onclick="return confirm('¿Está seguro de eliminar este gasto?')" style="color: #ef4444;">Eliminar</a>
                         </th:block>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(gastos)}">
-                    <td colspan="8" style="text-align: center;">No hay gastos registrados</td>
+                    <td colspan="8" style="text-align: center; padding: 2rem;">No se encontraron resultados</td>
                 </tr>
             </tbody>
         </table>
