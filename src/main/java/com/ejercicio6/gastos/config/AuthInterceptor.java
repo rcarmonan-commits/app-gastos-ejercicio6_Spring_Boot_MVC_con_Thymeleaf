@@ -20,7 +20,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         
         String uri = request.getRequestURI();
         // Rutas publicas
-        if (uri.equals("/") || uri.startsWith("/login") || uri.startsWith("/recuperar") || uri.startsWith("/css") || uri.startsWith("/js")) {
+        if (uri.equals("/") || uri.startsWith("/login") || uri.startsWith("/recuperar") || uri.startsWith("/registro") || uri.startsWith("/css") || uri.startsWith("/js")) {
             return true;
         }
 
