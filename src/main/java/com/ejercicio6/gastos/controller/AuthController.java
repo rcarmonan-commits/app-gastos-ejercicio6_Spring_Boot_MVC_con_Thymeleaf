@@ -78,4 +78,27 @@ public class AuthController {
     public String acercaDe() {
         return "layout/acerca_de";
     }
+
+    @GetMapping("/registro")
+    public String mostrarRegistro(Model model) {
+        model.addAttribute("usuario", new Usuario());
+        return "auth/registro";
+    }
+
+    @PostMapping("/registro")
+    public String procesarRegistro(@org.springframework.web.bind.annotation.ModelAttribute("usuario") Usuario usuario, Model model) {
+        if (usuarioService.buscarPorId(usuario.getId()).isPresent()) {
+            model.addAttribute("error", "El ID de usuario ya está en uso.");
+            return "auth/registro";
+        }
+        
+        // Asignamos rol Operador por defecto a los registrados públicamente
+        if (usuario.getRol() == null || usuario.getRol().isEmpty()) {
+            usuario.setRol("Operador");
+        }
+        
+        usuarioService.guardar(usuario);
+        model.addAttribute("exito", "Registro exitoso. Ahora puedes iniciar sesión.");
+        return "auth/registro";
+    }
 }
