@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout('Reportes de Usuarios', ~{::div})}">
+<body>
+    <div>
+        <div class="report-filters">
+            <div class="filter-card">
+                <h3>Filtrar por Rol</h3>
+                <form th:action="@{/usuarios/reportes/rol}" method="POST">
+                    <div class="form-group">
+                        <label>Seleccione el Rol:</label>
+                        <select name="rol" required>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Operador">Operador</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">Buscar</button>
+                </form>
+            </div>
+            
+            <div class="filter-card">
+                <h3>Buscar por Nombre</h3>
+                <form th:action="@{/usuarios/reportes/nombre}" method="POST">
+                    <div class="form-group">
+                        <label>Nombre o fragmento:</label>
+                        <input type="text" name="nombre" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Buscar</button>
+                </form>
+            </div>
+        </div>
+
+        <div th:if="${filtroAnterior}" class="report-results-header">
+            <h4>Resultados para: <span th:text="${filtroAnterior}"></span></h4>
+        </div>
+
+        <table class="data-table" th:if="${usuarios != null}">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="u : ${usuarios}">
+                    <td th:text="${u.id}"></td>
+                    <td th:text="${u.nombre}"></td>
+                    <td th:text="${u.email}"></td>
+                    <td th:text="${u.rol}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(usuarios)}">
+                    <td colspan="4" style="text-align: center;">No se encontraron resultados</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

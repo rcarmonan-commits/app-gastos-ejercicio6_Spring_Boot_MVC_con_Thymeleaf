@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout('Lista de Gastos', ~{::div})}">
+<body>
+    <div>
+        <div class="actions-bar">
+            <a th:href="@{/gastos/nuevo}" class="btn-primary">Registrar Nuevo Gasto</a>
+            <a th:href="@{/gastos/reportes}" class="btn-secondary">Generar Reportes</a>
+        </div>
+        
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Valor sin IVA</th>
+                    <th>IVA</th>
+                    <th>Valor Total</th>
+                    <th>Lugar</th>
+                    <th>Usuario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="gasto : ${gastos}">
+                    <td th:text="${gasto.idGasto}">1</td>
+                    <td th:text="${#dates.format(gasto.fecha, 'yyyy-MM-dd')}">2023-10-10</td>
+                    <td th:text="'$' + ${gasto.valorTotalSinIVA}">$100</td>
+                    <td th:text="'$' + ${gasto.ivaTotal}">$19</td>
+                    <td th:text="'$' + ${gasto.valorTotalConIVA}">$119</td>
+                    <td th:text="${gasto.lugar}">Restaurante</td>
+                    <td th:text="${gasto.usuario.nombre}">Juan Perez</td>
+                    <td class="action-buttons">
+                        <a th:href="@{/gastos/editar/{id}(id=${gasto.idGasto})}" class="btn-edit">Editar</a>
+                        <th:block th:if="${session.usuarioLogueado.rol == 'Administrador'}">
+                            <a th:href="@{/gastos/eliminar/{id}(id=${gasto.idGasto})}" class="btn-delete" onclick="return confirm('¿Está seguro de eliminar este gasto?')">Eliminar</a>
+                        </th:block>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(gastos)}">
+                    <td colspan="8" style="text-align: center;">No hay gastos registrados</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

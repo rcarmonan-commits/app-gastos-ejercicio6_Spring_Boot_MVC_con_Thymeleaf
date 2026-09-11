@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout('Formulario de Usuario', ~{::div})}">
+<body>
+    <div>
+        <!-- Si el usuario ya existe, el ID debería ser readonly o usar un hidden, pero para simplificar, usaremos readonly si estamos editando -->
+        <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="POST" class="standard-form">
+            
+            <div class="form-group">
+                <label for="id">ID de Usuario (Cédula o Nickname)</label>
+                <!-- Usamos readonly si el usuario ya existe (tiene nombre) para no cambiar la PK -->
+                <input type="text" id="id" th:field="*{id}" required th:readonly="${usuario.nombre != null}">
+                <div class="error-text" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="clave">Contraseña</label>
+                <input type="password" id="clave" th:field="*{clave}" required>
+                <div class="error-text" th:if="${#fields.hasErrors('clave')}" th:errors="*{clave}"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" id="nombre" th:field="*{nombre}" required>
+                <div class="error-text" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" th:field="*{email}" required>
+                <div class="error-text" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="rol">Rol del Sistema</label>
+                <select id="rol" th:field="*{rol}">
+                    <option value="Operador">Operador</option>
+                    <option value="Administrador">Administrador</option>
+                </select>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Guardar Usuario</button>
+                <a th:href="@{/usuarios}" class="btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

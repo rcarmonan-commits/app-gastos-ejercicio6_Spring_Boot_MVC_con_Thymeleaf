@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Gestión de Gastos</title>
+    <link th:href="@{/css/estilos.css}" rel="stylesheet">
+</head>
+<body>
+    <div class="layout-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Sistema de Gastos</h2>
+                <div class="user-info">
+                    <span th:text="${session.usuarioLogueado.nombre}">Usuario</span><br>
+                    <small class="badge" th:text="${session.usuarioLogueado.rol}">Rol</small>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a th:href="@{/gastos}" class="nav-item">Lista de Gastos</a>
+                <a th:href="@{/gastos/nuevo}" class="nav-item">Registrar Gasto</a>
+                <a th:href="@{/gastos/reportes}" class="nav-item">Reportes de Gastos</a>
+                
+                <th:block th:if="${session.usuarioLogueado.rol == 'Administrador'}">
+                    <div class="nav-divider">Administración</div>
+                    <a th:href="@{/usuarios}" class="nav-item">Gestión de Usuarios</a>
+                    <a th:href="@{/usuarios/reportes}" class="nav-item">Reportes de Usuarios</a>
+                </th:block>
+                
+                <a th:href="@{/logout}" class="nav-item btn-danger-nav">Cerrar Sesión</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <h1 th:text="${pageTitle}">Título</h1>
+            </header>
+            
+            <div class="content-wrapper">
+                <div th:if="${exito}" class="success-msg" th:text="${exito}"></div>
+                <div th:if="${error}" class="error-msg" th:text="${error}"></div>
+                
+                <!-- Main Body injected here -->
+                <div th:replace="${content}"></div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
