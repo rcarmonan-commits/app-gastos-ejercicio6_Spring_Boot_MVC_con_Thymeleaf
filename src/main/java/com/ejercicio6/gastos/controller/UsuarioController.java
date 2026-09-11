@@ -11,6 +11,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Controlador para la gestión de Usuarios.
+ * Cumple con los requerimientos de la Unidad 2: "Operaciones CRUD", "Autenticación" y "Reportes parametrizados".
+ * Maneja la lógica de validación de roles (Administrador) antes de acceder a las vistas Thymeleaf.
+ */
 @Controller
 @RequestMapping("/usuarios")
 public class UsuarioController {

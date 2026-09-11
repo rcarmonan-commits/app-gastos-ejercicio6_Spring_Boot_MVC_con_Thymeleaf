@@ -10,6 +10,12 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Repositorio de Gastos.
+ * Cumple con el requerimiento de la Unidad 2: "Persistencia de datos".
+ * Extiende JpaRepository para heredar métodos CRUD automáticos (save, findById, delete, findAll)
+ * sin necesidad de escribir código SQL (DAO) manual como en la Unidad 1.
+ */
 @Repository
 public interface GastoRepository extends JpaRepository<Gasto, Integer> {
 

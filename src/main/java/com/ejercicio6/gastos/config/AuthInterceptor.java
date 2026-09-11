@@ -5,6 +5,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+/**
+ * Interceptor de Autenticación.
+ * Cumple con el requerimiento de la Unidad 2: "Autenticación".
+ * Sustituye los Filtros (Filter) de Servlets de la Unidad 1.
+ * Intercepta todas las peticiones HTTP para verificar que exista una sesión válida (HttpSession)
+ * antes de permitir el acceso a los controladores protegidos.
+ */
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
 

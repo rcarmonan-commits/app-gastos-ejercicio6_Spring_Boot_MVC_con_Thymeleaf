@@ -1,37 +1,40 @@
 # Aplicación de Gastos - Spring Boot MVC + Thymeleaf
 
-Este proyecto es la migración de la aplicación Java EE original hacia un entorno moderno basado en **Spring Boot**, cumpliendo con la **Unidad 2** de la asignatura Desarrollo Web.
+Este proyecto es el resultado de la **Unidad 2** de la asignatura Desarrollo Web. Cumple con la migración estricta desde un entorno Servlets hacia un entorno moderno basado en el framework **Spring Boot MVC**.
 
-## Características Técnicas
-- **Framework Principal:** Spring Boot 3
-- **Arquitectura:** Modelo-Vista-Controlador (MVC)
-- **Motor de Plantillas:** Thymeleaf
-- **Persistencia:** Spring Data JPA + Hibernate
-- **Base de Datos:** MySQL
-- **Seguridad:** Interceptores personalizados (AuthInterceptor)
+## Requisitos Previos y Entorno
+- **Versión de Java:** Java 17 (o superior).
+- **IDE Recomendado:** Eclipse, IntelliJ IDEA o VS Code (con Spring Boot Extension Pack).
+- **Conexión a Internet:** Requerida para que la aplicación se conecte a la base de datos remota.
 
-## Estructura de Capas
-- `model`: Entidades JPA mapeadas a las tablas de la BD (`Usuario`, `Gasto`).
-- `repository`: Interfaces que extienden `JpaRepository` para el manejo automático de consultas SQL.
-- `service`: Capa de lógica de negocio (`UsuarioService`, `GastoService`, `EmailService`).
-- `controller`: Controladores Web que manejan las peticiones HTTP y renderizan las vistas Thymeleaf (`AuthController`, `UsuarioController`, `GastoController`).
+## Configuración de Base de Datos y Scripts
+El proyecto utiliza un servicio remoto y gratuito de bases de datos llamado **AlwaysData**. 
+- **No es necesario instalar MySQL localmente**.
+- Las credenciales están preconfiguradas de manera dinámica en el archivo `src/main/resources/application.properties`.
+- **Creación de BD:** El repositorio incluye el archivo `src/main/resources/schema.sql` (opcionalmente) que contiene la estructura original de las tablas, sin embargo, gracias a **Spring Data JPA**, las entidades se mapean de forma automática hacia la base de datos remota mediante la propiedad `spring.jpa.hibernate.ddl-auto=update`.
+- El sistema cuenta con las tablas obligatorias: `usuario`, `gasto` (ejercicio 6 asignado) y `configuracion_smtp`.
 
-## Configuración y Ejecución
-1. **Base de Datos**: 
-   Asegúrese de tener MySQL corriendo. La aplicación está configurada en `src/main/resources/application.properties` con las siguientes credenciales:
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/app_gastos_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-   spring.datasource.username=root
-   spring.datasource.password=
-   ```
-   *Nota: Spring Data JPA (`ddl-auto=update`) creará automáticamente las tablas basándose en las entidades.*
-   
-2. **Correo Electrónico (Recuperación de Clave)**:
-   Debe configurar credenciales SMTP válidas en `application.properties` para que el envío de correos funcione.
+## Configuración de Variables Necesarias (Correo SMTP)
+A diferencia de configuraciones estáticas, el sistema de recuperación de claves por correo es 100% dinámico. Las variables necesarias para el servidor de correo se obtienen directamente de la tabla `configuracion_smtp`. 
+- Un Administrador puede editar esta configuración ingresando a la aplicación y navegando al menú "Configuración SMTP".
 
-3. **Ejecución**:
-   El proyecto es estándar Maven. Puede ejecutarlo usando su IDE (Eclipse, IntelliJ, VSCode) o mediante la línea de comandos si tiene Maven instalado:
-   ```bash
-   mvn spring-boot:run
-   ```
-   La aplicación estará disponible en `http://localhost:8080`.
+## Estructura de Arquitectura por Capas
+El proyecto sigue estrictamente el flujo MVC requerido:
+1. **Model (`com.ejercicio6.gastos.model`):** Entidades JPA mapeadas a las tablas (`Usuario`, `Gasto`, `ConfiguracionSMTP`).
+2. **Repository (`com.ejercicio6.gastos.repository`):** Encapsula el acceso a datos mediante `JpaRepository`.
+3. **Service (`com.ejercicio6.gastos.service`):** Centraliza la lógica de negocio.
+4. **Controller (`com.ejercicio6.gastos.controller`):** Recibe las solicitudes HTTP, prepara los datos y devuelve las plantillas Thymeleaf. El control de sesión se gestiona con `AuthInterceptor`.
+5. **Vistas (`src/main/resources/templates`):** Plantillas HTML procesadas del lado del servidor con Thymeleaf.
+
+## Instrucciones para Ejecutar la Aplicación
+1. Clonar el repositorio en su máquina local.
+2. Abrir el proyecto en su IDE favorito como un proyecto **Maven** existente.
+3. Esperar a que Maven descargue las dependencias.
+4. Ejecutar la clase principal `GastosApplication.java` como una aplicación Java (o aplicación Spring Boot).
+5. (Alternativa) Si tiene Maven instalado en su línea de comandos, ejecute: `mvn spring-boot:run`
+6. Abrir el navegador e ingresar a la URL: `http://localhost:8080/`
+
+## Usuarios de Prueba (Datos Iniciales)
+Puede iniciar sesión con los siguientes datos (si existen previamente en la BD remota, o crear uno nuevo):
+- **ID:** (Debe crear un usuario o probar registrarse)
+- **Clave:** (La que asigne al registrarse)

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Configuración SMTP - App Gastos</title>
+</head>
+<body>
+    <div th:replace="~{layout/layout :: layout(~{::section})}">
+        <section>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">Configuración de Servidor de Correo (SMTP)</h4>
+                        </div>
+                        <div class="card-body">
+                            
+                            <div th:if="${exito}" class="alert alert-success" role="alert">
+                                <span th:text="${exito}"></span>
+                            </div>
+                            
+                            <p class="text-muted small">
+                                Estos datos se utilizan para enviar los correos de recuperación de contraseña a los usuarios. 
+                                La configuración se guarda directamente en la base de datos de manera dinámica.
+                            </p>
+
+                            <form th:action="@{/smtp/guardar}" method="post" th:object="${smtp}">
+                                <div class="mb-3">
+                                    <label for="host" class="form-label">Servidor SMTP (Host)</label>
+                                    <input type="text" class="form-control" id="host" th:field="*{host}" placeholder="ej: smtp.gmail.com" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="puerto" class="form-label">Puerto</label>
+                                    <input type="number" class="form-control" id="puerto" th:field="*{puerto}" placeholder="ej: 587" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="usuario" class="form-label">Usuario / Email</label>
+                                    <input type="email" class="form-control" id="usuario" th:field="*{usuario}" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="clave" class="form-label">Contraseña</label>
+                                    <input type="password" class="form-control" id="clave" th:field="*{clave}" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="remitente" class="form-label">Nombre del Remitente</label>
+                                    <input type="text" class="form-control" id="remitente" th:field="*{remitente}" placeholder="ej: Sistema de Gastos" required>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary">Guardar Configuración</button>
+                                    <a th:href="@{/gastos}" class="btn btn-secondary">Cancelar</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
