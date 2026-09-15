@@ -11,7 +11,7 @@
 | **Guía utilizada** | Guía de Spring Web MVC |
 | **Código fuente** | [Enlace al Repositorio en GitHub](https://github.com/rcarmonan-commits/app-gastos-ejercicio6_Spring_Boot_MVC_con_Thymeleaf) |
 | **Sustentación** | `[ENLACE_A_TU_VIDEO_AQUI]` |
-| **Aplicación desplegada** | [http://app-gastos-ejercicio6.alwaysdata.net/](http://app-gastos-ejercicio6.alwaysdata.net/) |
+| **Aplicación desplegada** | [https://app-gastos-ejercicio6-spring-boot-mvc.onrender.com/](https://app-gastos-ejercicio6-spring-boot-mvc.onrender.com/) |
 
 ---
 Este proyecto es el resultado de la **Unidad 2** de la asignatura Desarrollo Web. Cumple con la migración estricta desde un entorno Servlets hacia un entorno moderno basado en el framework **Spring Boot MVC**.
