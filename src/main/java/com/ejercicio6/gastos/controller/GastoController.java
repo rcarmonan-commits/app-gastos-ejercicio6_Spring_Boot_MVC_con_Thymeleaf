@@ -39,7 +39,8 @@ public class GastoController {
             Model model) {
         
         if (fechaInicio != null && fechaFin != null) {
-            model.addAttribute("gastos", gastoService.listarPorRangoFechas(fechaInicio, fechaFin));
+            java.util.List<Gasto> listaFechas = gastoService.listarPorRangoFechas(fechaInicio, fechaFin);
+            model.addAttribute("gastos", listaFechas);
             model.addAttribute("fechaInicio", new java.text.SimpleDateFormat("yyyy-MM-dd").format(fechaInicio));
             model.addAttribute("fechaFin", new java.text.SimpleDateFormat("yyyy-MM-dd").format(fechaFin));
             model.addAttribute("fechaInicioRango", new java.text.SimpleDateFormat("yyyy-MM-dd").format(fechaInicio));
@@ -47,7 +48,7 @@ public class GastoController {
             
             // Calculate totalRango
             double totalRango = 0.0;
-            for(Gasto g : gastoService.listarPorRangoFechas(fechaInicio, fechaFin)) {
+            for(Gasto g : listaFechas) {
                 totalRango += g.getValorTotalConIVA();
             }
             model.addAttribute("totalRango", totalRango);
@@ -68,20 +69,31 @@ public class GastoController {
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("gasto", new Gasto());
-        // Pasamos usuarios para el select del formulario
-        model.addAttribute("usuarios", usuarioService.listarTodos());
         return "gastos/form";
     }
 
     @PostMapping("/guardar")
     public String guardarGasto(@Valid @ModelAttribute("gasto") Gasto gasto, 
                                BindingResult result, 
+                               @RequestParam(value = "porcentajeIva", defaultValue = "19") Double porcentajeIva,
+                               HttpSession session,
                                Model model,
                                RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            model.addAttribute("usuarios", usuarioService.listarTodos());
             return "gastos/form";
         }
+        
+        // Asignar el usuario actual en sesión
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        if(usuarioLogueado != null) {
+            gasto.setUsuario(usuarioLogueado);
+        }
+
+        // Calcular los valores con el porcentaje del IVA dado, como el antiguo Servlet
+        double ivaTotal = gasto.getValorTotalSinIVA() * (porcentajeIva / 100.0);
+        double valorTotalConIVA = gasto.getValorTotalSinIVA() + ivaTotal;
+        gasto.setIvaTotal(ivaTotal);
+        gasto.setValorTotalConIVA(valorTotalConIVA);
         
         gastoService.guardar(gasto);
         redirectAttributes.addFlashAttribute("exito", "Gasto guardado exitosamente");
@@ -95,20 +107,13 @@ public class GastoController {
             return "redirect:/gastos";
         }
         model.addAttribute("gasto", gasto);
-        model.addAttribute("usuarios", usuarioService.listarTodos());
         return "gastos/form";
     }
 
     @GetMapping("/eliminar/{id}")
-    public String eliminarGasto(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes, HttpSession session) {
-        // En el sistema viejo, solo admin elimina
-        Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
-        if (u != null && "Administrador".equals(u.getRol())) {
-            gastoService.eliminar(id);
-            redirectAttributes.addFlashAttribute("exito", "Gasto eliminado");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Solo los administradores pueden eliminar");
-        }
+    public String eliminarGasto(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+        gastoService.eliminar(id);
+        redirectAttributes.addFlashAttribute("exito", "Gasto eliminado");
         return "redirect:/gastos";
     }
 

@@ -4,14 +4,14 @@
 
 | Campo | Información |
 |---|---|
-| **Estudiante** | `[PON_AQUI_TU_NOMBRE_COMPLETO_Y_CODIGO]` |
-| **Datos académicos** | Desarrollo Web \| Semestre `[X]` |
+| **Estudiante** | Rosary Carmona |
+| **Datos académicos** | Desarrollo Web \| Semestre IV |
 | **Actividad** | Spring Boot MVC con Thymeleaf: desarrollo web basado en framework |
 | **Ejercicio asignado** | Número 6 - Gasto |
 | **Guía utilizada** | Guía de Spring Web MVC |
 | **Código fuente** | [Enlace al Repositorio en GitHub](https://github.com/rcarmonan-commits/app-gastos-ejercicio6_Spring_Boot_MVC_con_Thymeleaf) |
 | **Sustentación** | `[ENLACE_A_TU_VIDEO_AQUI]` |
-| **Aplicación desplegada** | [App Spring Boot en Alwaysdata](http://app-gastos-ejercicio6.alwaysdata.net/springboot/) |
+| **Aplicación desplegada** | [http://app-gastos-ejercicio6.alwaysdata.net/](http://app-gastos-ejercicio6.alwaysdata.net/) |
 
 ---
 Este proyecto es el resultado de la **Unidad 2** de la asignatura Desarrollo Web. Cumple con la migración estricta desde un entorno Servlets hacia un entorno moderno basado en el framework **Spring Boot MVC**.
@@ -19,14 +19,14 @@ Este proyecto es el resultado de la **Unidad 2** de la asignatura Desarrollo Web
 ## Requisitos Previos y Entorno
 - **Versión de Java:** Java 17 (o superior).
 - **IDE Recomendado:** Eclipse, IntelliJ IDEA o VS Code (con Spring Boot Extension Pack).
-- **Conexión a Internet:** Requerida para que la aplicación se conecte a la base de datos remota.
+- **Motor de Base de Datos:** MariaDB o MySQL instalado localmente (o acceso a uno remoto).
 
 ## Configuración de Base de Datos y Scripts
-El proyecto utiliza un servicio remoto y gratuito de bases de datos llamado **AlwaysData**. 
-- **No es necesario instalar MySQL localmente**.
-- Las credenciales están preconfiguradas de manera dinámica en el archivo `src/main/resources/application.properties`.
-- **Creación de BD:** El repositorio incluye el archivo `src/main/resources/schema.sql` (opcionalmente) que contiene la estructura original de las tablas, sin embargo, gracias a **Spring Data JPA**, las entidades se mapean de forma automática hacia la base de datos remota mediante la propiedad `spring.jpa.hibernate.ddl-auto=update`.
-- El sistema cuenta con las tablas obligatorias: `usuario`, `gasto` (ejercicio 6 asignado) y `configuracion_smtp`.
+El proyecto incluye un **Asistente de Instalación (Setup Wizard)** integrado.
+- **No es necesario pre-configurar archivos de propiedades con credenciales**.
+- Al iniciar la aplicación por primera vez, si no existe el archivo de configuración `db_config.properties` en su directorio local (`${user.home}`), el sistema redirigirá automáticamente a una pantalla de instalación (Instalador).
+- Desde el Instalador web podrá ingresar las credenciales root de su motor de base de datos, y el sistema automáticamente creará la base de datos `app_gastos_db`, un usuario seguro para la app y ejecutará los scripts necesarios.
+- Gracias a **Spring Data JPA**, el esquema se actualiza automáticamente.
 
 ## Configuración de Variables Necesarias (Correo SMTP)
 A diferencia de configuraciones estáticas, el sistema de recuperación de claves por correo es 100% dinámico. Las variables necesarias para el servidor de correo se obtienen directamente de la tabla `configuracion_smtp`. 

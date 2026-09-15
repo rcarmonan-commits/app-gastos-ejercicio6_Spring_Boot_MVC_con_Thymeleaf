@@ -1,6 +1,7 @@
 package com.ejercicio6.gastos.controller;
 
 import com.ejercicio6.gastos.model.ConfiguracionSMTP;
+import com.ejercicio6.gastos.model.Usuario;
 import com.ejercicio6.gastos.repository.ConfiguracionSMTPRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,8 @@ public class ConfiguracionSMTPController {
 
     @GetMapping
     public String verFormulario(Model model, HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null || !"Administrador".equals(usuario.getRol())) {
             return "redirect:/";
         }
         
@@ -37,7 +39,8 @@ public class ConfiguracionSMTPController {
 
     @PostMapping("/guardar")
     public String guardarConfiguracion(ConfiguracionSMTP config, HttpSession session, Model model) {
-        if (session.getAttribute("usuarioLogueado") == null) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null || !"Administrador".equals(usuario.getRol())) {
             return "redirect:/";
         }
         

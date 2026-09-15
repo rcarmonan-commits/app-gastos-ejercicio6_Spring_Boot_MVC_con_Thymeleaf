@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import com.ejercicio6.gastos.util.GestorConfiguracion;
+import java.io.File;
 
 /**
  * Interceptor de Autenticación.
@@ -19,8 +21,25 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         
         String uri = request.getRequestURI();
+
+        // Lógica de Instalación (Setup Wizard)
+        // Detectar si estamos en un contenedor Docker (donde se usan variables de entorno)
+        boolean isDocker = new File("/.dockerenv").exists();
+        
+        // Si no estamos en Docker y no hay archivo de configuración local, forzamos el asistente web
+        if (!isDocker && !GestorConfiguracion.estaConfigurado()) {
+            if (!uri.startsWith("/instalador") && !uri.startsWith("/css") && !uri.startsWith("/js")) {
+                response.sendRedirect("/instalador");
+                return false;
+            }
+        } else if (uri.startsWith("/instalador")) {
+            // Si ya está instalado o estamos en Docker, proteger el instalador para evitar que lo usen
+            response.sendRedirect("/");
+            return false;
+        }
+
         // Rutas publicas
-        if (uri.equals("/") || uri.startsWith("/login") || uri.startsWith("/recuperar") || uri.startsWith("/registro") || uri.startsWith("/css") || uri.startsWith("/js")) {
+        if (uri.equals("/") || uri.startsWith("/login") || uri.startsWith("/recuperar") || uri.startsWith("/registro") || uri.startsWith("/css") || uri.startsWith("/js") || uri.startsWith("/instalador")) {
             return true;
         }
 

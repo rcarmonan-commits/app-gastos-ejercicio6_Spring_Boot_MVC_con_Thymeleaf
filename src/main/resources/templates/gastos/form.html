@@ -11,22 +11,30 @@
                 <div class="error-text" th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></div>
             </div>
             
-            <div class="form-group">
-                <label for="valorTotalSinIVA">Valor Total sin IVA</label>
-                <input type="number" step="0.01" id="valorTotalSinIVA" th:field="*{valorTotalSinIVA}" required>
-                <div class="error-text" th:if="${#fields.hasErrors('valorTotalSinIVA')}" th:errors="*{valorTotalSinIVA}"></div>
+            <div style="display: flex; gap: 1rem;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="valorTotalSinIVA">Valor Total sin IVA</label>
+                    <input type="number" step="0.01" id="valorTotalSinIVA" th:field="*{valorTotalSinIVA}" required>
+                    <div class="error-text" th:if="${#fields.hasErrors('valorTotalSinIVA')}" th:errors="*{valorTotalSinIVA}"></div>
+                </div>
+                
+                <div class="form-group" style="flex: 1;">
+                    <label for="porcentajeIva">Porcentaje de IVA (%)</label>
+                    <input type="number" step="0.1" id="porcentajeIva" name="porcentajeIva" value="19" required>
+                    <small>Ej: 19 para 19%</small>
+                </div>
             </div>
             
-            <div class="form-group">
-                <label for="ivaTotal">IVA Total</label>
-                <input type="number" step="0.01" id="ivaTotal" th:field="*{ivaTotal}" required>
-                <div class="error-text" th:if="${#fields.hasErrors('ivaTotal')}" th:errors="*{ivaTotal}"></div>
-            </div>
-            
-            <div class="form-group">
-                <label for="valorTotalConIVA">Valor Total con IVA</label>
-                <input type="number" step="0.01" id="valorTotalConIVA" th:field="*{valorTotalConIVA}" required>
-                <div class="error-text" th:if="${#fields.hasErrors('valorTotalConIVA')}" th:errors="*{valorTotalConIVA}"></div>
+            <div style="display: flex; gap: 1rem;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="ivaTotal">IVA Total (Calculado)</label>
+                    <input type="number" step="0.01" id="ivaTotal" th:field="*{ivaTotal}" readonly style="background-color: #334155; cursor: not-allowed;">
+                </div>
+                
+                <div class="form-group" style="flex: 1;">
+                    <label for="valorTotalConIVA">Valor Total con IVA</label>
+                    <input type="number" step="0.01" id="valorTotalConIVA" th:field="*{valorTotalConIVA}" readonly style="background-color: #334155; cursor: not-allowed; font-weight: bold; color: #10b981;">
+                </div>
             </div>
             
             <div class="form-group">
@@ -41,10 +49,9 @@
             </div>
             
             <div class="form-group">
-                <label for="usuario">Usuario Responsable</label>
-                <select id="usuario" th:field="*{usuario.id}" required>
-                    <option th:each="user : ${usuarios}" th:value="${user.id}" th:text="${user.nombre}"></option>
-                </select>
+                <label>Usuario Responsable</label>
+                <input type="text" readonly th:value="${session.usuarioLogueado.id + ' (' + session.usuarioLogueado.nombre + ')'}" style="background-color: #334155; cursor: not-allowed;">
+                <small>El gasto se asignará a tu cuenta automáticamente</small>
             </div>
             
             <div class="form-actions">
@@ -52,6 +59,31 @@
                 <a th:href="@{/gastos}" class="btn-secondary">Cancelar</a>
             </div>
         </form>
+
+        <script>
+            // Cálculo dinámico del total con IVA
+            const inputSinIva = document.getElementById('valorTotalSinIVA');
+            const inputPorcentaje = document.getElementById('porcentajeIva');
+            const inputIvaTotal = document.getElementById('ivaTotal');
+            const inputTotalConIva = document.getElementById('valorTotalConIVA');
+
+            function calcularTotal() {
+                const sinIva = parseFloat(inputSinIva.value) || 0;
+                const porcentaje = parseFloat(inputPorcentaje.value) || 0;
+                
+                const iva = sinIva * (porcentaje / 100);
+                const total = sinIva + iva;
+                
+                inputIvaTotal.value = iva.toFixed(2);
+                inputTotalConIva.value = total.toFixed(2);
+            }
+
+            inputSinIva.addEventListener('input', calcularTotal);
+            inputPorcentaje.addEventListener('input', calcularTotal);
+            
+            // Initial calc
+            calcularTotal();
+        </script>
     </div>
 </body>
 </html>
