@@ -23,11 +23,13 @@ public class AuthInterceptor implements HandlerInterceptor {
         String uri = request.getRequestURI();
 
         // Lógica de Instalación (Setup Wizard)
-        // Detectar si estamos en un contenedor Docker (donde se usan variables de entorno)
-        boolean isDocker = new File("/.dockerenv").exists();
+        // Detectar si estamos en un contenedor Docker, en Render o en algún PaaS (donde se usan variables de entorno)
+        boolean isCloudOrDocker = new File("/.dockerenv").exists() 
+                                || "true".equals(System.getenv("RENDER")) 
+                                || System.getenv("PORT") != null;
         
-        // Si no estamos en Docker y no hay archivo de configuración local, forzamos el asistente web
-        if (!isDocker && !GestorConfiguracion.estaConfigurado()) {
+        // Si no estamos en la nube/Docker y no hay archivo de configuración local, forzamos el asistente web
+        if (!isCloudOrDocker && !GestorConfiguracion.estaConfigurado()) {
             if (!uri.startsWith("/instalador") && !uri.startsWith("/css") && !uri.startsWith("/js")) {
                 response.sendRedirect("/instalador");
                 return false;
