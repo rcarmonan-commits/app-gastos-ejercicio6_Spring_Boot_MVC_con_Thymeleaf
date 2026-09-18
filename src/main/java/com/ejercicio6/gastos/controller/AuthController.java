@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * Controlador de Autenticación.
+ * Cumple con el requerimiento de la Unidad 2: "Aplicación web MVC tradicional".
+ * Utiliza @Controller en lugar de @RestController para devolver vistas HTML (Thymeleaf)
+ * renderizadas del lado del servidor, en lugar de datos JSON.
+ * 
+ * Gestiona el inicio de sesión, cierre de sesión y recuperación de contraseñas.
+ */
 @Controller
 public class AuthController {
 

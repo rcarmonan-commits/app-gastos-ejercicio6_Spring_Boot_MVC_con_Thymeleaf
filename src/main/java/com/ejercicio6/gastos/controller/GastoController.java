@@ -16,6 +16,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Date;
 
+/**
+ * Controlador para la gestión de Gastos.
+ * Cumple con los requerimientos de la Unidad 2: "Operaciones CRUD" y "Reportes parametrizados".
+ * Delega la lógica de negocio al GastoService y controla el flujo de las vistas Thymeleaf.
+ */
 @Controller
 @RequestMapping("/gastos")
 public class GastoController {
