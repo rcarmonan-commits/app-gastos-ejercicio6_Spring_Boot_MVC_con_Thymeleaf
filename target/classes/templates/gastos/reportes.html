@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout('Reportes de Gastos', ~{::div})}">
+<body>
+    <div>
+        <div class="report-filters">
+            <div class="filter-card">
+                <h3>Reporte por Rango de Fechas</h3>
+                <form th:action="@{/gastos/reportes/fechas}" method="POST">
+                    <div class="form-group">
+                        <label>Fecha Inicio:</label>
+                        <input type="date" name="fechaInicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha Fin:</label>
+                        <input type="date" name="fechaFin" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Buscar</button>
+                </form>
+            </div>
+            
+            <div class="filter-card">
+                <h3>Suma de Gastos por Lugar</h3>
+                <form th:action="@{/gastos/reportes/lugar}" method="POST">
+                    <div class="form-group">
+                        <label>Lugar:</label>
+                        <input type="text" name="lugar" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Calcular Suma</button>
+                </form>
+            </div>
+        </div>
+
+        <div th:if="${filtroAnterior}" class="report-results-header">
+            <h4>Resultados para: <span th:text="${filtroAnterior}"></span></h4>
+        </div>
+
+        <div th:if="${mensaje}" class="success-msg" style="margin-top: 1rem; font-size: 1.2rem; text-align: center;">
+            <strong th:text="${mensaje}"></strong>
+        </div>
+
+        <table class="data-table" th:if="${gastos != null}">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Total sin IVA</th>
+                    <th>IVA</th>
+                    <th>Total con IVA</th>
+                    <th>Lugar</th>
+                    <th>Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="gasto : ${gastos}">
+                    <td th:text="${gasto.idGasto}"></td>
+                    <td th:text="${#dates.format(gasto.fecha, 'yyyy-MM-dd')}"></td>
+                    <td th:text="'$' + ${gasto.valorTotalSinIVA}"></td>
+                    <td th:text="'$' + ${gasto.ivaTotal}"></td>
+                    <td th:text="'$' + ${gasto.valorTotalConIVA}"></td>
+                    <td th:text="${gasto.lugar}"></td>
+                    <td th:text="${gasto.usuario.nombre}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(gastos)}">
+                    <td colspan="7" style="text-align: center;">No se encontraron resultados</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

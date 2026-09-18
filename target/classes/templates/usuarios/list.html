@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/layout :: layout('Gestión de Usuarios', ~{::div})}">
+<body>
+    <div>
+        <div class="actions-bar">
+            <a th:href="@{/usuarios/nuevo}" class="btn-primary">Registrar Nuevo Usuario</a>
+            <a th:href="@{/usuarios/reportes}" class="btn-secondary">Generar Reportes</a>
+        </div>
+        
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID / Cédula</th>
+                    <th>Nombre Completo</th>
+                    <th>Correo Electrónico</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${usuarios}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.nombre}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td><span class="badge" th:text="${user.rol}"></span></td>
+                    <td class="action-buttons">
+                        <a th:href="@{/usuarios/editar/{id}(id=${user.id})}" class="btn-edit">Editar</a>
+                        <!-- No permitir auto-eliminación visualmente -->
+                        <th:block th:if="${session.usuarioLogueado.id != user.id}">
+                            <a th:href="@{/usuarios/eliminar/{id}(id=${user.id})}" class="btn-delete" onclick="return confirm('¿Está seguro de eliminar este usuario?')">Eliminar</a>
+                        </th:block>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(usuarios)}">
+                    <td colspan="5" style="text-align: center;">No hay usuarios registrados</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -65,4 +65,9 @@ public class AuthController {
         }
         return "auth/recuperar";
     }
+
+    @GetMapping("/acerca-de")
+    public String acercaDe() {
+        return "layout/acerca_de";
+    }
 }
